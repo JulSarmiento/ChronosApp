@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import java.util.Locale
 
 @Composable
         /**
@@ -48,4 +49,20 @@ fun MainTextField(
       .padding(horizontal = 30.dp)
       .padding(bottom = 15.dp)
   )
+}
+
+
+@Composable
+        /**
+         * Formats a given time in milliseconds into a string representation in the format "HH:MM:SS.SS".
+         * @param time The time in milliseconds to be formatted.
+         * @return A string representing the formatted time.
+         * @usage val formattedTime = TimeFormat(3661000) // "01:01:01.00"
+         */
+fun timeFormat(time: Long): String {
+  val hours = time / 3600000
+  val minutes = (time % 3600000) / 60000
+  val seconds = (time % 60000) / 1000
+
+  return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
 }

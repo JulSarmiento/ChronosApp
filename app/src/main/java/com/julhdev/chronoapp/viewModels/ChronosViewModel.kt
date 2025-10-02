@@ -12,6 +12,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+/**
+ * ChronosViewModel is a ViewModel that manages the state and operations related to Chrono entities.
+ * It interacts with the ChronosRepository to perform CRUD operations and exposes a StateFlow of the list of Chronos.
+ * @property repository The ChronosRepository used for data operations.
+ * @see ChronosRepository
+ * @see Chrono
+ * @usage Inject ChronosViewModel in UI components to observe and manipulate Chrono data.
+ */
 class ChronosViewModel @Inject constructor(private val repository: ChronosRepository): ViewModel() {
 
   private val _chronosList = MutableStateFlow<List<Chrono>>(emptyList())
