@@ -1,7 +1,18 @@
 package com.julhdev.chronoapp.components
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Timer
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -9,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import java.util.Locale
 
 @Composable
@@ -65,4 +77,64 @@ fun timeFormat(time: Long): String {
   val seconds = (time % 60000) / 1000
 
   return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
+}
+
+
+@Composable
+        /**
+         * A composable function that represents a clickable card displaying a title and time.
+         * @param title The title text to be displayed on the card.
+         * @param time The time text to be displayed on the card.
+         * @param onClick A lambda function that gets called when the card is clicked.
+         * @return A composable function that renders a clickable card with the specified title and time.
+         * @usage Card(title = "My Timer", time = "00:05:00", onClick = { /* Handle click */ })
+         */
+fun ChronoCard(
+  title: String,
+  time: String,
+  onClick: () -> Unit
+) {
+  Box(
+    modifier = Modifier
+      .fillMaxWidth()
+      .padding(horizontal = 10.dp)
+      .clickable { onClick() }
+  ){
+    Column(
+      modifier = Modifier
+        .padding(15.dp)
+    ) {
+      Text(
+        text = title,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold
+      )
+      Spacer(
+        modifier = Modifier
+          .padding(top = 5.dp)
+      )
+      Row {
+        Icon(
+          imageVector = Icons.Default.Timer,
+          contentDescription = "Timer Icon",
+          tint = Color.Gray
+        )
+
+        Text(
+          text = time,
+          fontSize = 16.sp,
+          color = Color.Gray,
+          modifier = Modifier
+            .padding(start = 5.dp)
+        )
+      }
+      HorizontalDivider(
+        modifier = Modifier
+          .padding(top = 10.dp)
+          .fillMaxWidth(),
+        thickness = 1.dp,
+        color = MaterialTheme.colorScheme.primary
+      )
+    }
+  }
 }

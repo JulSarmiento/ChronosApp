@@ -21,10 +21,10 @@
       </SelectionState>
       <SelectionState runConfigName="Chrono_App">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-10-02T01:30:53.248652900Z">
+        <DropdownSelection timestamp="2025-10-04T00:13:00.535868500Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="PhysicalDevice" identifier="serial=ZY22K7MMN4" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\jasa1\.android\avd\Pixel_9_Pro_XL.avd" />
             </handle>
           </Target>
         </DropdownSelection>

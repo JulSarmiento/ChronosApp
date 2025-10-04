@@ -19,8 +19,6 @@ import kotlinx.coroutines.flow.Flow
  */
 interface ChronosDataBaseDao {
 
-  // Crud operations
-
   @Query("SELECT * FROM chronos")
   fun getChronos(): Flow<List<Chrono>>
 

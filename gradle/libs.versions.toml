@@ -52,3 +52,4 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kapt = { id = "org.jetbrains.kotlin.kapt", version = "2.2.20" }
 
 
+

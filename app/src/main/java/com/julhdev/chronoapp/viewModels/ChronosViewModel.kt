@@ -37,18 +37,36 @@ class ChronosViewModel @Inject constructor(private val repository: ChronosReposi
     }
   }
 
+  /**
+   * Adds a new Chrono entity to the repository.
+   * @param chrono The Chrono entity to be added.
+   * @see Chrono
+   * @usage Call addChrono(chrono) to insert a new Chrono into the data source.
+   */
   fun addChrono( chrono: Chrono) {
     viewModelScope.launch {
       repository.addChrono(chrono)
     }
   }
 
+  /**
+   * Updates an existing Chrono entity in the repository.
+   * @param chrono The Chrono entity to be updated.
+   * @see Chrono
+   * @usage Call updateChrono(chrono) to modify an existing Chrono in the data source.
+   */
   fun updateChrono( chrono: Chrono) {
     viewModelScope.launch {
       repository.updateChrono(chrono)
     }
   }
 
+  /**
+   * Deletes a Chrono entity from the repository.
+   * @param chrono The Chrono entity to be deleted.
+   * @see Chrono
+   * @usage Call deleteChrono(chrono) to remove a Chrono from the data source.
+   */
   fun deleteChrono( chrono: Chrono) {
     viewModelScope.launch {
       repository.deleteChrono(chrono)

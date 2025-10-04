@@ -50,7 +50,7 @@ dependencies {
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.compose.material3)
   implementation(libs.androidx.material.icons.extended)
-
+  kapt(libs.androidx.room.compiler)
 
   implementation(libs.hilt.android)
   kapt(libs.hilt.compiler)

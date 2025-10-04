@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -33,9 +34,12 @@ import androidx.navigation.NavController
 import com.julhdev.chronoapp.components.FloatBtn
 import com.julhdev.chronoapp.components.MainCircleIconButton
 import com.julhdev.chronoapp.components.MainIconButton
+import com.julhdev.chronoapp.components.MainTextField
 import com.julhdev.chronoapp.components.MainTitle
 import com.julhdev.chronoapp.components.timeFormat
+import com.julhdev.chronoapp.model.Chrono
 import com.julhdev.chronoapp.viewModels.ChronometerViewModel
+import com.julhdev.chronoapp.viewModels.ChronosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 /**
@@ -47,7 +51,7 @@ import com.julhdev.chronoapp.viewModels.ChronometerViewModel
  * @usage AddView(navController = navController)
  */
 @Composable
-fun AddView(navController: NavController, chronometerViewModel: ChronometerViewModel) {
+fun AddView(navController: NavController, chronometerViewModel: ChronometerViewModel, chronosViewModel: ChronosViewModel) {
   Scaffold(
     topBar = {
       CenterAlignedTopAppBar(
@@ -64,16 +68,29 @@ fun AddView(navController: NavController, chronometerViewModel: ChronometerViewM
       )
     }
   ) { innerPadding ->
-    ContentAddView(innerPadding, navController, chronometerViewModel)
+    ContentAddView(innerPadding, navController, chronometerViewModel, chronosViewModel)
   }
 }
 
 
 @Composable
-fun ContentAddView(it: PaddingValues, navController: NavController, chronometerViewModel: ChronometerViewModel) {
-
+/**
+ * A composable function that represents the content of the Add view.
+ * It displays a chronometer with start, pause, stop, and save buttons.
+ *
+ * @param it The padding values to be applied to the content.
+ * @param navController The NavController used for navigation between different views.
+ * @param chronometerViewModel The ViewModel managing the state of the chronometer.
+ * @return A composable function that renders the content of the Add view.
+ * @usage ContentAddView(it = paddingValues, navController = navController, chronometerViewModel = viewModel)
+ */
+fun ContentAddView(
+  it: PaddingValues,
+  navController: NavController,
+  chronometerViewModel: ChronometerViewModel,
+  chronosViewModel: ChronosViewModel
+) {
   val state = chronometerViewModel.state
-
   LaunchedEffect(
     state.chronometerActive,
   ) {
@@ -120,8 +137,36 @@ fun ContentAddView(it: PaddingValues, navController: NavController, chronometerV
       MainCircleIconButton(
         icon = Icons.Default.Save,
         enable = !state.chronometerActive && chronometerViewModel.time != 0L,
-        onClick = { /* TODO */ },
+        onClick = { chronometerViewModel.shotTextField() },
       )
+    }
+
+    Spacer(
+      modifier = Modifier
+        .height(20.dp)
+    )
+
+    if(state.showTextField) {
+      MainTextField(
+        value = state.title,
+        onValueChange = { chronometerViewModel.onValue(it) },
+        label = "Title"
+      )
+
+      Button(
+        onClick = {
+          chronosViewModel.addChrono(
+            Chrono(
+              title = state.title,
+              time = chronometerViewModel.time
+            )
+          )
+          chronometerViewModel.onStop()
+          navController.popBackStack()
+        }
+      ) {
+        Text(text = "Guardar")
+      }
     }
   }
 }
