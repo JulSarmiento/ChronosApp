@@ -103,13 +103,13 @@ fun ContentHomeView(it: PaddingValues, navController: NavController, chronosView
 
         SwipeableActionsBox(
           endActions = listOf(delete),
-          swipeThreshold = 270.dp
+          swipeThreshold = 150.dp
         ) {
           ChronoCard(
             title = it.title,
             time = timeFormat(it.time),
             onClick = {
-              /* TODO: Navigate to Edit View with the selected chrono details */
+              navController.navigate("EditView/${it.id}")
             }
           )
         }

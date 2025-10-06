@@ -6,12 +6,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.julhdev.chronoapp.reposotiries.ChronosRepository
 import com.julhdev.chronoapp.state.ChronoState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
+@HiltViewModel
 /**
  * ChronometerViewModel is a ViewModel that manages the state and operations related to a chronometer.
  * It holds the current state of the chronometer, including whether it is active, the elapsed time,
@@ -20,7 +25,8 @@ import kotlinx.coroutines.launch
  * @see ChronoState
  * @usage Inject ChronometerViewModel in UI components to observe and manipulate chronometer state.
  */
-class ChronometerViewModel: ViewModel() {
+class ChronometerViewModel @Inject constructor(private val repository: ChronosRepository) :
+  ViewModel() {
 
   var state by mutableStateOf(ChronoState())
     private set
@@ -31,6 +37,32 @@ class ChronometerViewModel: ViewModel() {
   var time by mutableLongStateOf(0L)
     private set
 
+  /**
+   * Fetches a chronometer item by its ID from the repository and updates the ViewModel's state.
+   * The function launches a coroutine in the IO dispatcher to perform the data retrieval operation.
+   * It collects the chronometer item from the repository and, if the item is not null,
+   * updates the time and title in the ViewModel's state.
+   * @param id The ID of the chronometer item to be fetched.
+   * @see ChronosRepository.getChronoById
+   * @usage Call getChronoById(id) to load a specific chronometer's data into the ViewModel.
+   */
+  fun getChronoById(id: Long) {
+    viewModelScope.launch(Dispatchers.IO) {
+      repository.getChronoById(id).collect { item ->
+        item?.let {
+          time = it.time
+          state = state.copy(title = it.title)
+        }
+      }
+    }
+  }
+
+  /**
+   * Updates the title in the ViewModel's state with the provided value.
+   * This function can be called to change the title associated with the chronometer.
+   * @param value The new title to be set in the state.
+   * @usage Call onValue(value) to update the title in the chronometer state.
+   */
   fun onValue(value: String) {
     state = state.copy(title = value)
   }
@@ -41,7 +73,7 @@ class ChronometerViewModel: ViewModel() {
    * It does not handle the actual timing logic, which should be managed separately,
    * typically using a coroutine Job.
    */
-  fun onStart(){
+  fun onStart() {
     state = state.copy(chronometerActive = true)
   }
 
@@ -51,7 +83,7 @@ class ChronometerViewModel: ViewModel() {
    * This function can be called to temporarily halt the timing operation of the chronometer
    * without resetting the elapsed time.
    */
-  fun onPause(){
+  fun onPause() {
     state = state.copy(chronometerActive = false, showSaveBtn = true)
   }
 
@@ -61,7 +93,7 @@ class ChronometerViewModel: ViewModel() {
    * It also cancels any ongoing timing Job associated with the chronometer.
    * This function can be called to halt the timing operation of the chronometer.
    */
-  fun onStop(){
+  fun onStop() {
     chronoJob?.cancel()
     time = 0L
     state = state.copy(chronometerActive = false, showSaveBtn = false, showTextField = false)
@@ -70,7 +102,7 @@ class ChronometerViewModel: ViewModel() {
   /** Hides the text field by updating the state to set showTextField to false.
    * This function can be called when the text field is no longer needed or should be hidden from the UI.
    */
-  fun shotTextField(){
+  fun shotTextField() {
     state = state.copy(showTextField = true)
   }
 
@@ -82,10 +114,10 @@ class ChronometerViewModel: ViewModel() {
    * to ensure the timing operations are correctly started or stopped.
    */
   fun chronos() {
-    if(state.chronometerActive){
+    if (state.chronometerActive) {
       chronoJob?.cancel()
       chronoJob = viewModelScope.launch {
-        while(true){
+        while (true) {
           time += 1000L
           delay(1000L)
         }
