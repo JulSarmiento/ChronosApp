@@ -1,25 +1,34 @@
 package com.julhdev.chronoapp.navigation
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.julhdev.chronoapp.viewModels.ChronometerViewModel
+import com.julhdev.chronoapp.viewModels.ChronosViewModel
 import com.julhdev.chronoapp.views.AddView
 import com.julhdev.chronoapp.views.EditView
 import com.julhdev.chronoapp.views.HomeView
 
 @Composable
-fun NavManager(){
+fun NavManager(chronometerViewModel: ChronometerViewModel, chronosViewModel: ChronosViewModel) {
   val navController = rememberNavController()
-  NavHost(navController = navController, startDestination = "Home"){
-    composable("Home"){
-      HomeView(navController)
+  NavHost(navController = navController, startDestination = "Home") {
+    composable("Home") {
+      HomeView(navController, chronosViewModel)
     }
-    composable("AddView"){
-      AddView(navController)
+    composable("AddView") {
+      AddView(navController, chronometerViewModel, chronosViewModel)
     }
-    composable("EditView"){
-      EditView(navController)
+    composable(
+      "EditView/{id}", arguments = listOf(
+      navArgument("id") { type = NavType.LongType }
+    )) {
+      val id = it.arguments?.getLong("id") ?: 0L
+      EditView(navController, chronometerViewModel, chronosViewModel, id)
     }
   }
 }

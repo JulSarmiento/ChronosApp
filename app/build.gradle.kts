@@ -2,7 +2,8 @@ plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.kotlin.android)
   alias(libs.plugins.kotlin.compose)
-  id("com.google.devtools.ksp")
+  alias(libs.plugins.hilt)
+  alias(libs.plugins.kapt)
 }
 
 android {
@@ -48,14 +49,14 @@ dependencies {
   implementation(libs.androidx.compose.ui.graphics)
   implementation(libs.androidx.compose.ui.tooling.preview)
   implementation(libs.androidx.compose.material3)
+  implementation(libs.androidx.material.icons.extended)
+  kapt(libs.androidx.room.compiler)
 
   implementation(libs.hilt.android)
-  ksp(libs.hilt.compiler)
+  kapt(libs.hilt.compiler)
 
   implementation(libs.androidx.navigation.compose)
-
   implementation(libs.androidx.room.ktx)
-  ksp(libs.androidx.room.compiler)
 
   implementation(libs.me.saket.swipe)
 
